@@ -1,11 +1,14 @@
 package com.adi.corkproject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,22 +25,38 @@ public class User {
     private String username;
     private String password;
 
+    @ManyToOne
+
+    @JoinColumn(name="groups_id", nullable = false)
+    @JsonBackReference
+    private UserGroup userGroup;
+
+    public User(String email, String username, String password, UserGroup userGroup) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.userGroup = userGroup;
+    }
+
     public User(Long id, String email, String username, String password) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
-        userCount++;
     }
 
     public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
-        userCount++;
     }
 
     public User() {
+
+    }
+
+    @PostConstruct
+    private void increaseUserCount(){
         userCount++;
     }
 
@@ -56,6 +75,8 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User(%i) email: %s, username %s", userCount, email, username);
+        String userGroup = this.getUserGroup().getGroupType() == UserGroup.GROUP_TYPE.STUDENT ? "STUDENT" : "TEACHER";
+        return "User(" + userCount +") email: " + email +", username: " + username + ", group: " + userGroup;
     }
 }
+

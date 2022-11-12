@@ -2,6 +2,8 @@ package com.adi.corkproject.controller;
 
 import com.adi.corkproject.exception.UserExistsException;
 import com.adi.corkproject.model.User;
+import com.adi.corkproject.model.UserGroup;
+import com.adi.corkproject.service.UserGroupService;
 import com.adi.corkproject.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,23 +19,14 @@ import java.util.List;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
-
-    public UserController(UserService userService) {
+    private final UserGroupService userGroupService;
+    public UserController(UserService userService, UserGroupService userGroupService) {
         this.userService = userService;
+        this.userGroupService = userGroupService;
     }
 
     @GetMapping("/all")
     public @ResponseBody List<User> getAllUsers(){
-        init();
         return userService.findAllUsers();
-    }
-
-    public void init(){
-        try {
-            userService.save("adrianoitaliano@gmail.com", "adriaaan7", "password");
-            userService.save("medusaofficial@gmail.com", "medusaofficial", "medusapass");
-        }catch (UserExistsException exception){
-            exception.printStackTrace();
-        }
     }
 }
