@@ -2,6 +2,7 @@ package com.adi.corkproject.service;
 
 import com.adi.corkproject.model.UserGroup;
 import com.adi.corkproject.repository.UserGroupRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,4 +20,5 @@ public class UserGroupService implements  IUserGroupService{
     public UserGroup save(UserGroup.GROUP_TYPE group_type) {
         return userGroupRepository.save(new UserGroup(group_type));
     }
+
 }

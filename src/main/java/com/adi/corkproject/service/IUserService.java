@@ -14,4 +14,6 @@ public interface IUserService {
 
     boolean checkIfUserIsPresentByEmail(String email);
     boolean checkIfUserIsPresentByUsername(String username);
+
+    User deleteUserById(Long id);
 }

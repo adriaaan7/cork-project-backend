@@ -26,8 +26,7 @@ public class User {
     private String password;
 
     @ManyToOne
-
-    @JoinColumn(name="groups_id", nullable = false)
+    @JoinColumn(name="group_id")
     @JsonBackReference
     private UserGroup userGroup;
 

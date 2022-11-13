@@ -1,6 +1,7 @@
 package com.adi.corkproject.service;
 
-import com.adi.corkproject.exception.UserExistsException;
+import com.adi.corkproject.exception.UserExistingException;
+import com.adi.corkproject.exception.UserNotExistingException;
 import com.adi.corkproject.exception.UserNotFoundException;
 import com.adi.corkproject.model.User;
 import com.adi.corkproject.model.UserGroup;
@@ -42,14 +43,24 @@ public class UserService implements IUserService {
         return optionalUser.get();
     }
 
+    /*
+        #TODO
+        Checking if email is valid
+        Later on: hashing password and changing how it is stored
+     */
     @Override
     public User save(String email, String username, String password, UserGroup userGroup) {
         if(isPresent(email, username))
-            throw new UserExistsException("User with email: " + email + " and username: " + username + " already exists in the database");
+            throw new UserExistingException("User with email: " + email + " and username: " + username + " already exists in the database");
         log.info("Saving user to the database");
+        System.out.println(email);
+        System.out.println(username);
+        System.out.println(password);
+        System.out.println(userGroup);
         User user = new User(email, username, password, userGroup);
         userGroup.getUser().add(user);
-        return userRepository.save(user);
+        System.out.println(userRepository.save(user));
+        return user;
     }
 
     @Override
@@ -72,5 +83,16 @@ public class UserService implements IUserService {
         return users
                 .stream()
                 .anyMatch(user -> user.getUsername().equals(username));
+    }
+
+    @Override
+    public User deleteUserById(Long id) {
+        User user = new User();
+        if (userRepository.findById(id).isPresent()){
+            user = userRepository.findById(id).get();
+            userRepository.delete(user);
+        }
+        if(user.getId() <= 0) throw new UserNotExistingException("User with id: " + id + "does not exist in the database");
+        return user;
     }
 }

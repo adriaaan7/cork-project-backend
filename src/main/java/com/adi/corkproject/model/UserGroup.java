@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class UserGroup {
 
     private GROUP_TYPE groupType;
 
-    @OneToMany(mappedBy = "userGroup")
+    @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<User> user = new ArrayList<>();
 
